@@ -21,6 +21,10 @@ export class GildedRose {
     return name === 'Sulfuras, Hand of Ragnaros';
   }
 
+  isConjuredItem(name: string):boolean {
+    return name === 'Conjured Mana Cake';
+  }
+
   isBackstagePass(name: string):boolean {
     return name === 'Backstage passes to a TAFKAL80ETC concert';
   }
@@ -37,8 +41,17 @@ export class GildedRose {
     return quality > 0;
   }
 
+  isBelowMinQuality(quality: number): boolean {
+    return quality < 0;
+  }
+
   calculateNewSellInDate(item: Item): number {
     return !this.isLegendaryItem(item.name)? item.sellIn - 1 : item.sellIn;
+  }
+
+  calculateDegradedQuality(item: Item): number {
+    const quality = !this.isConjuredItem(item.name)? item.quality -1 : item.quality -2;
+    return this.isBelowMinQuality(quality)? 0 : quality;
   }
 
   updateQuality() {
@@ -47,7 +60,7 @@ export class GildedRose {
 
       if (!this.isAgedBrie(this.items[i].name) && !this.isBackstagePass(this.items[i].name)) {
         if (this.isAboveMinQuality(this.items[i].quality) && !this.isLegendaryItem(this.items[i].name)) {
-            this.items[i].quality = this.items[i].quality - 1;
+          this.items[i].quality = this.calculateDegradedQuality(this.items[i]);
         }
       } else {
         if (this.isBelowMaxQuality(this.items[i].quality)) {
@@ -66,10 +79,10 @@ export class GildedRose {
         if (!this.isAgedBrie(this.items[i].name)) {
           if (!this.isBackstagePass(this.items[i].name)) {
             if (this.isAboveMinQuality(this.items[i].quality) && !this.isLegendaryItem(this.items[i].name)) {
-              this.items[i].quality = this.items[i].quality - 1;
+              this.items[i].quality = this.calculateDegradedQuality(this.items[i]);
             }
           } else {
-            this.items[i].quality = this.items[i].quality - this.items[i].quality;
+            this.items[i].quality = 0;
           }
         } else {
           if (this.isBelowMaxQuality(this.items[i].quality)) {
