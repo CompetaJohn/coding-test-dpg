@@ -37,8 +37,14 @@ export class GildedRose {
     return quality > 0;
   }
 
+  calculateNewSellInDate(item: Item): number {
+    return !this.isLegendaryItem(item.name)? item.sellIn - 1 : item.sellIn;
+  }
+
   updateQuality() {
     for (let i = 0; i < this.items.length; i++) {
+      this.items[i].sellIn = this.calculateNewSellInDate(this.items[i]);
+
       if (!this.isAgedBrie(this.items[i].name) && !this.isBackstagePass(this.items[i].name)) {
         if (this.isAboveMinQuality(this.items[i].quality) && !this.isLegendaryItem(this.items[i].name)) {
             this.items[i].quality = this.items[i].quality - 1;
@@ -47,17 +53,14 @@ export class GildedRose {
         if (this.isBelowMaxQuality(this.items[i].quality)) {
           this.items[i].quality = this.items[i].quality + 1;
           if (this.isBackstagePass(this.items[i].name)) {
-            if (this.isBelowMaxQuality(this.items[i].quality) && this.items[i].sellIn < 11) {
+            if (this.isBelowMaxQuality(this.items[i].quality) && this.items[i].sellIn < 10) {
               this.items[i].quality = this.items[i].quality + 1;
             }
-            if (this.isBelowMaxQuality(this.items[i].quality) && this.items[i].sellIn < 6) {
+            if (this.isBelowMaxQuality(this.items[i].quality) && this.items[i].sellIn < 5) {
               this.items[i].quality = this.items[i].quality + 1;
             }
           }
         }
-      }
-      if (!this.isLegendaryItem(this.items[i].name)) {
-        this.items[i].sellIn = this.items[i].sellIn - 1;
       }
       if (this.items[i].sellIn < 0) {
         if (!this.isAgedBrie(this.items[i].name)) {
