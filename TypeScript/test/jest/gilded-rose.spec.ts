@@ -78,7 +78,11 @@ describe('Gilded Rose', () => {
   });
 
   it('Should work for "Backstage Passes" ', () => {
-    const ticket = {name: "Backstage passes to a TAFKAL80ETC concert", sellIn: 11, quality: 46}
+    const ticket = {
+      name: "Backstage passes to a TAFKAL80ETC concert",
+      sellIn: 11,
+      quality: 46
+    }
 
     const gildedRose = new GildedRose([
       new Item(ticket.name, ticket.sellIn, ticket.quality),
