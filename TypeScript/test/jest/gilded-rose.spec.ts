@@ -43,32 +43,38 @@ describe('Gilded Rose', () => {
     expect(items[0].quality).toBe(item.quality);
   });
 
-  it('Should work for "Aged Brie" in date ', () => {
+  it('Should work for "Aged Brie" ', () => {
     const item = {
       name: "Aged Brie",
-      sellIn: 10,
-      quality: 40
+      sellIn: 2,
+      quality: 43
     }
 
     const gildedRose = new GildedRose([new Item(item.name, item.sellIn, item.quality)]);
-    const items = gildedRose.updateQuality();
+    let items = gildedRose.updateQuality();
     expect(items[0].name).toBe(item.name);
-    expect(items[0].sellIn).toBe(item.sellIn - 1);
-    expect(items[0].quality).toBe(item.quality + 1);
-  });
+    expect(items[0].sellIn).toBe(1);
+    expect(items[0].quality).toBe(44);
 
-  it('Should work for "Aged Brie" past sellIn date ', () => {
-    const item = {
-      name: "Aged Brie",
-      sellIn: -1,
-      quality: 40
-    }
-
-    const gildedRose = new GildedRose([new Item(item.name, item.sellIn, item.quality)]);
-    const items = gildedRose.updateQuality();
+    items = gildedRose.updateQuality();
     expect(items[0].name).toBe(item.name);
-    expect(items[0].sellIn).toBe(item.sellIn - 1);
-    expect(items[0].quality).toBe(item.quality + 2);
+    expect(items[0].sellIn).toBe(0);
+    expect(items[0].quality).toBe(45);
+
+    items = gildedRose.updateQuality();
+    expect(items[0].name).toBe(item.name);
+    expect(items[0].sellIn).toBe(-1);
+    expect(items[0].quality).toBe(47);
+
+    items = gildedRose.updateQuality();
+    expect(items[0].name).toBe(item.name);
+    expect(items[0].sellIn).toBe(-2);
+    expect(items[0].quality).toBe(49);
+
+    items = gildedRose.updateQuality();
+    expect(items[0].name).toBe(item.name);
+    expect(items[0].sellIn).toBe(-3);
+    expect(items[0].quality).toBe(50);
   });
 
   it('Should work for "Backstage Passes" ', () => {
