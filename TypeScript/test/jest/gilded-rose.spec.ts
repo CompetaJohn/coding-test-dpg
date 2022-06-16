@@ -4,29 +4,50 @@ describe('Gilded Rose', () => {
   it('Should work for simple items ', () => {
     const item = {
       name: "+5 Dexterity Vest",
-      sellIn: 10,
-      quality: 20
+      sellIn: 1,
+      quality: 4
     }
 
     const gildedRose = new GildedRose([new Item(item.name, item.sellIn, item.quality)]);
-    const items = gildedRose.updateQuality();
+    let items = gildedRose.updateQuality();
     expect(items[0].name).toBe(item.name);
-    expect(items[0].sellIn).toBe(item.sellIn - 1);
-    expect(items[0].quality).toBe(item.quality-1);
+    expect(items[0].sellIn).toBe(0);
+    expect(items[0].quality).toBe(3);
+
+    items = gildedRose.updateQuality();
+    expect(items[0].name).toBe(item.name);
+    expect(items[0].sellIn).toBe(-1);
+    expect(items[0].quality).toBe(1);
+
+    items = gildedRose.updateQuality();
+    expect(items[0].name).toBe(item.name);
+    expect(items[0].sellIn).toBe(-2);
+    expect(items[0].quality).toBe(0);
   });
 
-  it('Should work for legendary items that are in date', () => {
-    const item = {
+  it('Should work for legendary items', () => {
+    const item0 = {
       name: "Sulfuras, Hand of Ragnaros",
       sellIn: 10,
       quality: 80
     }
+    const item1 = {
+      name: "Sulfuras, Hand of Ragnaros",
+      sellIn: -10,
+      quality: 80
+    }
 
-    const gildedRose = new GildedRose([new Item(item.name, item.sellIn, item.quality)]);
+    const gildedRose = new GildedRose([
+      new Item(item0.name, item0.sellIn, item0.quality),
+      new Item(item1.name, item1.sellIn, item1.quality)
+    ]);
     const items = gildedRose.updateQuality();
-    expect(items[0].name).toBe(item.name);
-    expect(items[0].sellIn).toBe(item.sellIn);
-    expect(items[0].quality).toBe(item.quality);
+    expect(items[0].name).toBe(item0.name);
+    expect(items[0].sellIn).toBe(item0.sellIn);
+    expect(items[0].quality).toBe(item0.quality);
+    expect(items[1].name).toBe(item1.name);
+    expect(items[1].sellIn).toBe(item1.sellIn);
+    expect(items[1].quality).toBe(item1.quality);
   });
 
   it('Should work for legendary items that are out of  date', () => {
