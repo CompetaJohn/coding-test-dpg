@@ -70,4 +70,44 @@ describe('Gilded Rose', () => {
     expect(items[0].sellIn).toBe(item.sellIn - 1);
     expect(items[0].quality).toBe(item.quality + 2);
   });
+
+  it('Should work for "Backstage Passes" ', () => {
+    const ticket = {name: "Backstage passes to a TAFKAL80ETC concert", sellIn: 11, quality: 46}
+
+    const gildedRose = new GildedRose([
+      new Item(ticket.name, ticket.sellIn, ticket.quality),
+    ]);
+    let items = gildedRose.updateQuality();
+    expect(items[0].name).toBe(ticket.name); //Name should always remain the same
+    expect(items[0].sellIn).toBe(10);
+    expect(items[0].quality).toBe(47);
+
+    items = gildedRose.updateQuality();
+    expect(items[0].name).toBe(ticket.name);
+    expect(items[0].sellIn).toBe(9);
+    expect(items[0].quality).toBe(49);
+
+    items = gildedRose.updateQuality();
+    expect(items[0].name).toBe(ticket.name);
+    expect(items[0].sellIn).toBe(8);
+    expect(items[0].quality).toBe(50);
+    //Update to day of sale
+    gildedRose.updateQuality();
+    gildedRose.updateQuality();
+    gildedRose.updateQuality();
+    gildedRose.updateQuality();
+    gildedRose.updateQuality();
+    gildedRose.updateQuality();
+    gildedRose.updateQuality();
+    items = gildedRose.updateQuality();
+    expect(items[0].name).toBe(ticket.name);
+    expect(items[0].sellIn).toBe(0);
+    expect(items[0].quality).toBe(50);
+
+    items = gildedRose.updateQuality();
+    expect(items[0].name).toBe(ticket.name);
+    expect(items[0].sellIn).toBe(-1);
+    expect(items[0].quality).toBe(0);
+  });
+
 });
