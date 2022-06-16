@@ -12,9 +12,14 @@ export class Item {
 
 export class GildedRose {
   items: Array<Item>;
+  quality: {
+    min: number;
+    max: number;
+  }
 
   constructor(items = [] as Array<Item>) {
     this.items = items;
+    this.quality = {min: 0, max: 50};
   }
 
   isLegendaryItem(name: string):boolean {
@@ -34,24 +39,24 @@ export class GildedRose {
   }
 
   isBelowMaxQuality(quality: number): boolean {
-    return quality < 50;
-  }
-
-  isAboveMinQuality(quality: number): boolean {
-    return quality > 0;
+    return quality < this.quality.max;
   }
 
   isBelowMinQuality(quality: number): boolean {
-    return quality < 0;
+    return quality < this.quality.min;
   }
 
   calculateNewSellInDate(item: Item): number {
     return !this.isLegendaryItem(item.name)? item.sellIn - 1 : item.sellIn;
   }
 
-  calculateDegradedQuality(item: Item): number {
+  calculateQualityDegradation(item: Item): number {
+    if(this.isLegendaryItem(item.name)){
+      return item.quality;
+    }
+
     const quality = !this.isConjuredItem(item.name)? item.quality -1 : item.quality -2;
-    return this.isBelowMinQuality(quality)? 0 : quality;
+    return this.isBelowMinQuality(quality)? this.quality.min : quality;
   }
 
   updateQuality() {
@@ -59,9 +64,7 @@ export class GildedRose {
       this.items[i].sellIn = this.calculateNewSellInDate(this.items[i]);
 
       if (!this.isAgedBrie(this.items[i].name) && !this.isBackstagePass(this.items[i].name)) {
-        if (this.isAboveMinQuality(this.items[i].quality) && !this.isLegendaryItem(this.items[i].name)) {
-          this.items[i].quality = this.calculateDegradedQuality(this.items[i]);
-        }
+        this.items[i].quality = this.calculateQualityDegradation(this.items[i]);
       } else {
         if (this.isBelowMaxQuality(this.items[i].quality)) {
           this.items[i].quality = this.items[i].quality + 1;
@@ -78,11 +81,9 @@ export class GildedRose {
       if (this.items[i].sellIn < 0) {
         if (!this.isAgedBrie(this.items[i].name)) {
           if (!this.isBackstagePass(this.items[i].name)) {
-            if (this.isAboveMinQuality(this.items[i].quality) && !this.isLegendaryItem(this.items[i].name)) {
-              this.items[i].quality = this.calculateDegradedQuality(this.items[i]);
-            }
+            this.items[i].quality = this.calculateQualityDegradation(this.items[i]);
           } else {
-            this.items[i].quality = 0;
+            this.items[i].quality = this.quality.min;
           }
         } else {
           if (this.isBelowMaxQuality(this.items[i].quality)) {
