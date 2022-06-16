@@ -102,7 +102,7 @@ describe('Gilded Rose', () => {
     const ticket = {
       name: "Backstage passes to a TAFKAL80ETC concert",
       sellIn: 11,
-      quality: 46
+      quality: 5
     }
 
     const gildedRose = new GildedRose([
@@ -111,30 +111,37 @@ describe('Gilded Rose', () => {
     let items = gildedRose.updateQuality();
     expect(items[0].name).toBe(ticket.name); //Name should always remain the same
     expect(items[0].sellIn).toBe(10);
-    expect(items[0].quality).toBe(47);
+    expect(items[0].quality).toBe(6);
 
     items = gildedRose.updateQuality();
     expect(items[0].name).toBe(ticket.name);
     expect(items[0].sellIn).toBe(9);
-    expect(items[0].quality).toBe(49);
+    expect(items[0].quality).toBe(8);
 
     items = gildedRose.updateQuality();
     expect(items[0].name).toBe(ticket.name);
     expect(items[0].sellIn).toBe(8);
-    expect(items[0].quality).toBe(50);
-    //Update to day of sale
-    gildedRose.updateQuality();
-    gildedRose.updateQuality();
-    gildedRose.updateQuality();
-    gildedRose.updateQuality();
-    gildedRose.updateQuality();
-    gildedRose.updateQuality();
-    gildedRose.updateQuality();
+    expect(items[0].quality).toBe(10);
+
+    //Update until days left is 3 to test
+    gildedRose.updateQuality(); //7 days
+    gildedRose.updateQuality(); //6 days
+    gildedRose.updateQuality(); //5 days
+    gildedRose.updateQuality(); //4 days
+    items = gildedRose.updateQuality();
+    expect(items[0].name).toBe(ticket.name);
+    expect(items[0].sellIn).toBe(3);
+    expect(items[0].quality).toBe(22);
+
+    //Update until days left is 0 to test
+    gildedRose.updateQuality(); //2 days
+    gildedRose.updateQuality(); //1 days
     items = gildedRose.updateQuality();
     expect(items[0].name).toBe(ticket.name);
     expect(items[0].sellIn).toBe(0);
-    expect(items[0].quality).toBe(50);
+    expect(items[0].quality).toBe(31);
 
+    //Watch the quality drop to 0, after the event
     items = gildedRose.updateQuality();
     expect(items[0].name).toBe(ticket.name);
     expect(items[0].sellIn).toBe(-1);
