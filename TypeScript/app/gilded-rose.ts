@@ -50,8 +50,8 @@ export class GildedRose {
     return !this.isLegendaryItem(item.name)? item.sellIn - 1 : item.sellIn;
   }
 
-  calculateQualityDegradation(item: Item): number {
-    if(this.isLegendaryItem(item.name)){
+  calculateDegradedQuality(item: Item): number {
+    if (this.isLegendaryItem(item.name)) {
       return item.quality;
     }
 
@@ -64,7 +64,7 @@ export class GildedRose {
       this.items[i].sellIn = this.calculateNewSellInDate(this.items[i]);
 
       if (!this.isAgedBrie(this.items[i].name) && !this.isBackstagePass(this.items[i].name)) {
-        this.items[i].quality = this.calculateQualityDegradation(this.items[i]);
+        this.items[i].quality = this.calculateDegradedQuality(this.items[i]);
       } else {
         if (this.isBelowMaxQuality(this.items[i].quality)) {
           this.items[i].quality = this.items[i].quality + 1;
@@ -81,7 +81,7 @@ export class GildedRose {
       if (this.items[i].sellIn < 0) {
         if (!this.isAgedBrie(this.items[i].name)) {
           if (!this.isBackstagePass(this.items[i].name)) {
-            this.items[i].quality = this.calculateQualityDegradation(this.items[i]);
+            this.items[i].quality = this.calculateDegradedQuality(this.items[i]);
           } else {
             this.items[i].quality = this.quality.min;
           }
